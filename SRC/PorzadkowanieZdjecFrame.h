@@ -27,61 +27,61 @@ public:
 
 protected:
 	
-	void e_LoadFolderOnButtonClick(wxCommandEvent& event);
+	void _LoadFolder(wxCommandEvent& event);
 	
 
-	void e_ExportOnButtonClick(wxCommandEvent& event);
+	void _Export(wxCommandEvent& event);
 	
 
-	void e_UpdateUI(wxUpdateUIEvent& event);
+	void _UpdateInterface(wxUpdateUIEvent& event);
 	
 
-	void e_OnKeyDown(wxKeyEvent& event);
+	void _KeyPressed(wxKeyEvent& event);
 	
-	void e_WidthOnCheck(wxCommandEvent& event);
-	
-
-	void e_HeightOnCheck(wxCommandEvent& event);
+	void _WidthCheckBox(wxCommandEvent& event);
 	
 
-	void e_SemiAutomaticModeOnCheck(wxCommandEvent& event);
+	void _HeightCheckBox(wxCommandEvent& event);
+	
+
+	void _SemiAutomaticMode(wxCommandEvent& event);
 	
 
 
-	void e_MaxHeightControlOnSpinCtrl(wxSpinEvent& event);
-	void e_MaxHeightControlOnSpinCtrlText(wxCommandEvent& event);
-	void e_MaxHeightControlOnTextEnter(wxCommandEvent& event);
-	void e_MaxWidthControlOnSpinCtrl(wxSpinEvent& event);
-	void e_MaxWidthControlOnSpinCtrlText(wxCommandEvent& event);
-	void e_MaxWidthControlOnTextEnter(wxCommandEvent& event);
+	void _MaxHeightSpinCtrl(wxSpinEvent& event);
+	void _MaxHeightSpinCtrlText(wxCommandEvent& event);
+	void _MaxHeightTextEnter(wxCommandEvent& event);
+	void _MaxWidthSpinCtrl(wxSpinEvent& event);
+	void _MaxWidthSpinCtrlText(wxCommandEvent& event);
+	void _MaxWidthTextEnter(wxCommandEvent& event);
 
 
-	void e_CompressionLevelOnSlider(wxCommandEvent& event);
+	void _CompressionLevel(wxCommandEvent& event);
 
 
-	void m_Repaint();
+	void _Repaint();
 
 
-	void m_GetFilesPaths(const wxDir& dir);
+	void _GetPaths(const wxDir& dir);
 
 
-	const wxArrayString m_GetAllFilesInDirWithExtension(const wxDir& dir, const wxString extension) const;
+	const wxArrayString _GetAllFiles(const wxDir& dir, const wxString extension) const;
 
 
-	void m_GoToNextFrame();
+	void _NextImage();
 
 
-	void m_SaveOneImage(int index);
+	void _SaveOne(int index);
 
 
-	void m_AddImageToMiniatures(FIBITMAP* miniatures, FIBITMAP* bitmap, int& widthIndex, int& heightIndex);
+	void _AddToMiniatures(FIBITMAP* miniatures, FIBITMAP* bitmap, int& widthIndex, int& heightIndex);
 
 
 
-	void m_CloneDir(wxString& source, wxString& target);
+	void _CopyDir(wxString& source, wxString& target);
 
 
-	bool m_IsImageToCopyInsideFolder(wxString& currPath) const;
+	bool _ImageCheck(wxString& currPath) const;
 
 private:	
 	const std::vector<std::string> c_extensions = { "*.png", "*.jpg", "*.raw", "*.bmp", "*.tiff","*.RAW" };

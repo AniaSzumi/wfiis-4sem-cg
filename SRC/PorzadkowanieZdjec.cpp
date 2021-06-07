@@ -79,25 +79,25 @@ PorzadkowanieZdjec::PorzadkowanieZdjec(wxWindow* parent, wxWindowID id, const wx
 	wxBoxSizer* bSizer14;
 	bSizer14 = new wxBoxSizer(wxVERTICAL);
 
-	m_staticText4 = new wxStaticText(this, wxID_ANY, wxT("Kompresja"), wxDefaultPosition, wxDefaultSize, 0);
-	m_staticText4->Wrap(-1);
-	bSizer14->Add(m_staticText4, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
+	m_staticText1 = new wxStaticText(this, wxID_ANY, wxT("Kompresja"), wxDefaultPosition, wxDefaultSize, 0);
+	m_staticText1->Wrap(-1);
+	bSizer14->Add(m_staticText1, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, 5);
 
 	bSizer12->Add(bSizer14, 1, wxEXPAND, 5);
 
 	wxBoxSizer* bSizer15;
 	bSizer15 = new wxBoxSizer(wxHORIZONTAL);
 
-	m_staticText5 = new wxStaticText(this, wxID_ANY, wxT("Min"), wxDefaultPosition, wxDefaultSize, 0);
-	m_staticText5->Wrap(-1);
-	bSizer15->Add(m_staticText5, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
+	m_staticText2 = new wxStaticText(this, wxID_ANY, wxT("Min"), wxDefaultPosition, wxDefaultSize, 0);
+	m_staticText2->Wrap(-1);
+	bSizer15->Add(m_staticText2, 0, wxALL | wxALIGN_CENTER_VERTICAL, 5);
 
 	m_compressionLevel = new wxSlider(this, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL);
 	bSizer15->Add(m_compressionLevel, 1, wxALL | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 5);
 
-	m_staticText8 = new wxStaticText(this, wxID_ANY, wxT("Max"), wxDefaultPosition, wxDefaultSize, 0);
-	m_staticText8->Wrap(-1);
-	bSizer15->Add(m_staticText8, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
+	m_staticText3 = new wxStaticText(this, wxID_ANY, wxT("Max"), wxDefaultPosition, wxDefaultSize, 0);
+	m_staticText3->Wrap(-1);
+	bSizer15->Add(m_staticText3, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
 
 	bSizer12->Add(bSizer15, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL, 5);
 
@@ -149,36 +149,36 @@ PorzadkowanieZdjec::PorzadkowanieZdjec(wxWindow* parent, wxWindowID id, const wx
 	/// ////////////////////////////////////////////////////////////////////////////
 
 	
-	m_checkBoxWidth->Connect(wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::e_WidthOnCheck), NULL, this);
-	m_checkBoxHeight->Connect(wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::e_HeightOnCheck), NULL, this);
-	m_checkBoxSemiAutomaticMode->Connect(wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::e_SemiAutomaticModeOnCheck), NULL, this);
-	m_loadFolder->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::e_LoadFolderOnButtonClick), NULL, this);
-	m_export->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::e_ExportOnButtonClick), NULL, this);
-	Connect(wxEVT_UPDATE_UI, wxUpdateUIEventHandler(PorzadkowanieZdjec::e_UpdateUI));
-	m_maxHeightControl->Connect(wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler(PorzadkowanieZdjec::e_MaxHeightControlOnSpinCtrl), NULL, this);
-	m_maxHeightControl->Connect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(PorzadkowanieZdjec::e_MaxHeightControlOnSpinCtrlText), NULL, this);
-	m_maxHeightControl->Connect(wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(PorzadkowanieZdjec::e_MaxHeightControlOnTextEnter), NULL, this);
-	m_maxWidthControl->Connect(wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler(PorzadkowanieZdjec::e_MaxWidthControlOnSpinCtrl), NULL, this);
-	m_maxWidthControl->Connect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(PorzadkowanieZdjec::e_MaxWidthControlOnSpinCtrlText), NULL, this);
-	m_maxWidthControl->Connect(wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(PorzadkowanieZdjec::e_MaxWidthControlOnTextEnter), NULL, this);
-	m_compressionLevel->Connect(wxEVT_SLIDER, wxCommandEventHandler(PorzadkowanieZdjec::e_CompressionLevelOnSlider), NULL, this);
+	m_checkBoxWidth->Connect(wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::_WidthCheckBox), NULL, this);
+	m_checkBoxHeight->Connect(wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::_HeightCheckBox), NULL, this);
+	m_checkBoxSemiAutomaticMode->Connect(wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::_SemiAutomaticMode), NULL, this);
+	m_loadFolder->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::_LoadFolder), NULL, this);
+	m_export->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::Export), NULL, this);
+	Connect(wxEVT_UPDATE_UI, wxUpdateUIEventHandler(PorzadkowanieZdjec::_UpdateInterface));
+	m_maxHeightControl->Connect(wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler(PorzadkowanieZdjec::_MaxHeightSpinCtrl), NULL, this);
+	m_maxHeightControl->Connect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(PorzadkowanieZdjec::_MaxHeightSpinCtrlText), NULL, this);
+	m_maxHeightControl->Connect(wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(PorzadkowanieZdjec::e_MaxHeightTextEnter), NULL, this);
+	m_maxWidthControl->Connect(wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler(PorzadkowanieZdjec::e_MaxWidthSpinCtrl), NULL, this);
+	m_maxWidthControl->Connect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(PorzadkowanieZdjec::_MaxWidthSpinCtrlText), NULL, this);
+	m_maxWidthControl->Connect(wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(PorzadkowanieZdjec::_MaxWidthTextEnter), NULL, this);
+	m_compressionLevel->Connect(wxEVT_SLIDER, wxCommandEventHandler(PorzadkowanieZdjec::_CompressionLeve), NULL, this);
 }
 
 PorzadkowanieZdjec::~PorzadkowanieZdjec()
 {
 	// Disconnect Events
-	m_checkBoxWidth->Disconnect(wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::e_WidthOnCheck), NULL, this);
-	m_checkBoxHeight->Disconnect(wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::e_HeightOnCheck), NULL, this);
-	m_checkBoxSemiAutomaticMode->Disconnect(wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::e_SemiAutomaticModeOnCheck), NULL, this);
-	m_loadFolder->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::e_LoadFolderOnButtonClick), NULL, this);
-	m_export->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::e_ExportOnButtonClick), NULL, this);
-	Disconnect(wxEVT_UPDATE_UI, wxUpdateUIEventHandler(PorzadkowanieZdjec::e_UpdateUI));
-	m_maxHeightControl->Disconnect(wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler(PorzadkowanieZdjec::e_MaxHeightControlOnSpinCtrl), NULL, this);
-	m_maxHeightControl->Disconnect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(PorzadkowanieZdjec::e_MaxHeightControlOnSpinCtrlText), NULL, this);
-	m_maxHeightControl->Disconnect(wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(PorzadkowanieZdjec::e_MaxHeightControlOnTextEnter), NULL, this);
-	m_maxWidthControl->Disconnect(wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler(PorzadkowanieZdjec::e_MaxWidthControlOnSpinCtrl), NULL, this);
-	m_maxWidthControl->Disconnect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(PorzadkowanieZdjec::e_MaxWidthControlOnSpinCtrlText), NULL, this);
-	m_maxWidthControl->Disconnect(wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(PorzadkowanieZdjec::e_MaxWidthControlOnTextEnter), NULL, this);
-	m_compressionLevel->Disconnect(wxEVT_SLIDER, wxCommandEventHandler(PorzadkowanieZdjec::e_CompressionLevelOnSlider), NULL, this);
+	m_checkBoxWidth->Disconnect(wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::_WidthCheckBox), NULL, this);
+	m_checkBoxHeight->Disconnect(wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::_HeightCheckBox), NULL, this);
+	m_checkBoxSemiAutomaticMode->Disconnect(wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::_SemiAutomaticMode), NULL, this);
+	m_loadFolder->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::_LoadFolder), NULL, this);
+	m_export->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(PorzadkowanieZdjec::Export), NULL, this);
+	Disconnect(wxEVT_UPDATE_UI, wxUpdateUIEventHandler(PorzadkowanieZdjec::_UpdateInterface));
+	m_maxHeightControl->Disconnect(wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler(PorzadkowanieZdjec::_MaxHeightSpinCtrl), NULL, this);
+	m_maxHeightControl->Disconnect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(PorzadkowanieZdjec::_MaxHeightSpinCtrlText), NULL, this);
+	m_maxHeightControl->Disconnect(wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(PorzadkowanieZdjec::e_MaxHeightTextEnter), NULL, this);
+	m_maxWidthControl->Disconnect(wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler(PorzadkowanieZdjec::e_MaxWidthControlO), NULL, this);
+	m_maxWidthControl->Disconnect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(PorzadkowanieZdjec::_MaxWidthSpinCtrlText), NULL, this);
+	m_maxWidthControl->Disconnect(wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler(PorzadkowanieZdjec::_MaxWidthTextEnter), NULL, this);
+	m_compressionLevel->Disconnect(wxEVT_SLIDER, wxCommandEventHandler(PorzadkowanieZdjec::_CompressionLeve), NULL, this);
 
 }

@@ -4,7 +4,7 @@ PorzadkowanieZdjecFrame::PorzadkowanieZdjecFrame(wxWindow* parent)
 	: PhotoOrganizer(parent),
 	m_image(new wxImage())
 {
-	m_panel->Bind(wxEVT_CHAR_HOOK, &PorzadkowanieZdjecFrame::e_OnKeyDown, this);
+	m_panel->Bind(wxEVT_CHAR_HOOK, &PorzadkowanieZdjecFrame::_KeyPressed, this);
 	wxInitAllImageHandlers();
 	m_maxWidthControl->Disable();
 	m_maxHeightControl->Disable();
@@ -16,7 +16,7 @@ PorzadkowanieZdjecFrame::~PorzadkowanieZdjecFrame()
 }
 
 
-void PorzadkowanieZdjecFrame::e_LoadFolderOnButtonClick(wxCommandEvent& event)
+void PorzadkowanieZdjecFrame::_LoadFolder(wxCommandEvent& event)
 {
 	m_imagesPathArray.Empty();
 	wxString defaultPath = wxT("/");
@@ -25,7 +25,7 @@ void PorzadkowanieZdjecFrame::e_LoadFolderOnButtonClick(wxCommandEvent& event)
 	{
 		m_sourcePath = dialog.GetPath();
 		wxDir current(m_sourcePath);
-		m_GetFilesPaths(current);
+		_GetPaths(current);
 
 		if (m_counter == 0)
 		{
@@ -46,7 +46,7 @@ void PorzadkowanieZdjecFrame::e_LoadFolderOnButtonClick(wxCommandEvent& event)
 	}
 }
 
-void PorzadkowanieZdjecFrame::e_ExportOnButtonClick(wxCommandEvent& event)
+void PorzadkowanieZdjecFrame::_Export(wxCommandEvent& event)
 {
 	wxString defaultPath = wxT("/");
 	wxDirDialog dialog(this, wxT("Wybierz folder"), defaultPath, wxDD_NEW_DIR_BUTTON);
@@ -64,17 +64,17 @@ void PorzadkowanieZdjecFrame::e_ExportOnButtonClick(wxCommandEvent& event)
 			{
 				if (m_isSemiAutomaticModeOn)
 				{
-					m_CloneDir(m_sourcePath, m_destinationPath);
+					_CopyDir(m_sourcePath, m_destinationPath);
 					m_isLoadingImages = true;
 					m_saved = 0;
-					m_GoToNextFrame();
+					_NextImage();
 				}
 				else if (!m_isSemiAutomaticModeOn)
 				{
-					m_CloneDir(m_sourcePath, m_destinationPath);
+					_CopyDir(m_sourcePath, m_destinationPath);
 					for (int i = 0; i < m_counter; ++i)
 						#pragma omp parallel for
-						m_SaveOneImage(i);
+						_SaveOne(i);
 					m_saved = m_counter;
 					m_progressBar->SetValue(0);
 					wxMessageBox("Konwersja zako�czona.");
@@ -94,12 +94,12 @@ void PorzadkowanieZdjecFrame::e_ExportOnButtonClick(wxCommandEvent& event)
 	}
 }
 
-void PorzadkowanieZdjecFrame::e_UpdateUI(wxUpdateUIEvent& event)	
+void PorzadkowanieZdjecFrame::_UpdateInterface(wxUpdateUIEvent& event)	
 {
-	m_Repaint();
+	_Repaint();
 }
 
-void PorzadkowanieZdjecFrame::e_OnKeyDown(wxKeyEvent& event)
+void PorzadkowanieZdjecFrame::_KeyPressed(wxKeyEvent& event)
 {
 	if (m_isSemiAutomaticModeOn && m_isLoadingImages)
 	{
@@ -107,15 +107,15 @@ void PorzadkowanieZdjecFrame::e_OnKeyDown(wxKeyEvent& event)
 		{
 		case 316:
 			m_angle += 1;
-			m_Repaint();
+			_Repaint();
 			break;
 		case 314:
 			m_angle -= 1;
-			m_Repaint();
+			_Repaint();
 			break;
 		case 13:
-			m_SaveOneImage(m_saved);
-			m_GoToNextFrame();
+			_SaveOne(m_saved);
+			_NextImage();
 			break;
 		default:
 			break;
@@ -124,60 +124,60 @@ void PorzadkowanieZdjecFrame::e_OnKeyDown(wxKeyEvent& event)
 	event.Skip();
 }
 
-void PorzadkowanieZdjecFrame::e_WidthOnCheck(wxCommandEvent& event)
+void PorzadkowanieZdjecFrame::_WidthCheckBox(wxCommandEvent& event)
 {
 	m_isCustomWidth = m_checkBoxWidth->GetValue();
 	m_isCustomWidth ? m_maxWidthControl->Enable() : m_maxWidthControl->Disable();
 }
 
-void PorzadkowanieZdjecFrame::e_HeightOnCheck(wxCommandEvent& event)
+void PorzadkowanieZdjecFrame::_HeightCheckBox(wxCommandEvent& event)
 {
 	m_isCustomHeight = m_checkBoxHeight->GetValue();
 	m_isCustomHeight ? m_maxHeightControl->Enable() : m_maxHeightControl->Disable();
 }
 
-void PorzadkowanieZdjecFrame::e_SemiAutomaticModeOnCheck(wxCommandEvent& event)
+void PorzadkowanieZdjecFrame::_SemiAutomaticMode(wxCommandEvent& event)
 {
 	m_isSemiAutomaticModeOn = m_checkBoxSemiAutomaticMode->GetValue();
 }
 
-void PorzadkowanieZdjecFrame::e_MaxHeightControlOnSpinCtrl(wxSpinEvent& event)
+void PorzadkowanieZdjecFrame::_MaxHeightSpinCtrl(wxSpinEvent& event)
 {
 	m_maxHeight = m_maxHeightControl->GetValue();
 }
 
-void PorzadkowanieZdjecFrame::e_MaxHeightControlOnSpinCtrlText(wxCommandEvent& event)
+void PorzadkowanieZdjecFrame::_MaxHeightSpinCtrlText(wxCommandEvent& event)
 {
 	m_maxHeight = m_maxHeightControl->GetValue();
 }
 
-void PorzadkowanieZdjecFrame::e_MaxHeightControlOnTextEnter(wxCommandEvent& event)
+void PorzadkowanieZdjecFrame::_MaxHeightTextEnter(wxCommandEvent& event)
 {
 	m_maxHeight = m_maxHeightControl->GetValue();
 }
 
-void PorzadkowanieZdjecFrame::e_MaxWidthControlOnSpinCtrl(wxSpinEvent& event)
+void PorzadkowanieZdjecFrame::_MaxWidthSpinCtrl(wxSpinEvent& event)
 {
 	m_maxWidth = m_maxWidthControl->GetValue();
 }
 
-void PorzadkowanieZdjecFrame::e_MaxWidthControlOnSpinCtrlText(wxCommandEvent& event)
+void PorzadkowanieZdjecFrame::_MaxWidthSpinCtrlText(wxCommandEvent& event)
 {
 	m_maxWidth = m_maxWidthControl->GetValue();
 }
 
-void PorzadkowanieZdjecFrame::e_MaxWidthControlOnTextEnter(wxCommandEvent& event)
+void PorzadkowanieZdjecFrame::_MaxWidthTextEnter(wxCommandEvent& event)
 {
 	m_maxWidth = m_maxWidthControl->GetValue();
 }
 
-void PorzadkowanieZdjecFrame::e_CompressionLevelOnSlider(wxCommandEvent& event)
+void PorzadkowanieZdjecFrame::_CompressionLevel(wxCommandEvent& event)
 {
 	m_compression = 100 - m_compressionLevel->GetValue();
 }
 
 
-void PorzadkowanieZdjecFrame::m_Repaint()
+void PorzadkowanieZdjecFrame::_Repaint()
 {
 	if (m_image->Ok())
 	{
@@ -231,7 +231,7 @@ void PorzadkowanieZdjecFrame::m_Repaint()
 	}
 }
 
-void PorzadkowanieZdjecFrame::m_GetFilesPaths(const wxDir& source)
+void PorzadkowanieZdjecFrame::_GetPaths(const wxDir& source)
 {
 	wxArrayString subDirs;
 	wxString dirName;
@@ -241,7 +241,7 @@ void PorzadkowanieZdjecFrame::m_GetFilesPaths(const wxDir& source)
 		bool isSubDir = source.GetFirst(&dirName, wxEmptyString, wxDIR_DIRS);
 		while (isSubDir)
 		{
-			if (m_IsImageToCopyInsideFolder(source.GetName() + '\\' + dirName))
+			if (_ImageCheck(source.GetName() + '\\' + dirName))
 			{
 				subDirs.Add(dirName);
 			}
@@ -250,7 +250,7 @@ void PorzadkowanieZdjecFrame::m_GetFilesPaths(const wxDir& source)
 
 		for (wxString sub : subDirs)
 		{
-			m_GetFilesPaths(source.GetName() + '\\' + sub);
+			_GetPaths(source.GetName() + '\\' + sub);
 		}
 	}
 
@@ -275,7 +275,7 @@ void PorzadkowanieZdjecFrame::m_GetFilesPaths(const wxDir& source)
 	}
 }
 
-const wxArrayString PorzadkowanieZdjecFrame::m_GetAllFilesInDirWithExtension(const wxDir& dir, const wxString extension) const
+const wxArrayString PorzadkowanieZdjecFrame::_GetAllFiles(const wxDir& dir, const wxString extension) const
 {
 	wxString fileName;
 	wxArrayString files;
@@ -288,7 +288,7 @@ const wxArrayString PorzadkowanieZdjecFrame::m_GetAllFilesInDirWithExtension(con
 	return files;
 }
 
-void PorzadkowanieZdjecFrame::m_GoToNextFrame()
+void PorzadkowanieZdjecFrame::_NextImage()
 {
 	if (m_saved < m_counter)
 	{
@@ -297,7 +297,7 @@ void PorzadkowanieZdjecFrame::m_GoToNextFrame()
 		{
 			m_saved++;
 		}
-		m_Repaint();
+		_Repaint();
 	}
 	else
 	{
@@ -309,7 +309,7 @@ void PorzadkowanieZdjecFrame::m_GoToNextFrame()
 	}
 }
 
-void PorzadkowanieZdjecFrame::m_SaveOneImage(int index)
+void PorzadkowanieZdjecFrame::_SaveOne(int index)
 {
 	int setHeight, setWidth;
 
@@ -388,7 +388,7 @@ void PorzadkowanieZdjecFrame::m_SaveOneImage(int index)
 	m_progressBar->SetValue((int)((m_saved * 100) / m_counter));
 }
 
-void PorzadkowanieZdjecFrame::m_AddImageToMiniatures(FIBITMAP* miniatures, FIBITMAP* bitmap, int& widthIndex, int& heightIndex){
+void PorzadkowanieZdjecFrame::_AddToMiniatures(FIBITMAP* miniatures, FIBITMAP* bitmap, int& widthIndex, int& heightIndex){
 	FIBITMAP* bitmapNew;
 	FIBITMAP* bitmapRescaled;
 
@@ -450,7 +450,7 @@ void PorzadkowanieZdjecFrame::m_AddImageToMiniatures(FIBITMAP* miniatures, FIBIT
 	FreeImage_Unload(bitmapRescaled);
 }
 
-void PorzadkowanieZdjecFrame::m_CloneDir(wxString& currPath, wxString& targetPath)
+void PorzadkowanieZdjecFrame::_CopyDir(wxString& currPath, wxString& targetPath)
 {
 	wxArrayString subdirectories;
 	wxString dirName;
@@ -468,7 +468,7 @@ void PorzadkowanieZdjecFrame::m_CloneDir(wxString& currPath, wxString& targetPat
 
 	for (const auto& format : c_extensions)
 	{
-		files = m_GetAllFilesInDirWithExtension(source, format);
+		files = _GetAllFiles(source, format);
 
 		for (wxString name : files)
 		{
@@ -490,7 +490,7 @@ void PorzadkowanieZdjecFrame::m_CloneDir(wxString& currPath, wxString& targetPat
 				heightIndex = filesInDir / 5;
 				if(miniatures)
 				{
-					m_AddImageToMiniatures(miniatures, bitmap, widthIndex, heightIndex);
+					_AddToMiniatures(miniatures, bitmap, widthIndex, heightIndex);
 				}
 				FreeImage_Unload(bitmap);
 				filesInDir++;
@@ -511,7 +511,7 @@ void PorzadkowanieZdjecFrame::m_CloneDir(wxString& currPath, wxString& targetPat
 		bool cont = source.GetFirst(&dirName, wxEmptyString, wxDIR_DIRS);
 		while (cont)
 		{
-			if (m_destinationPath != currPath + '\\' + dirName && m_IsImageToCopyInsideFolder(currPath + '\\' + dirName))
+			if (m_destinationPath != currPath + '\\' + dirName && _ImageCheck(currPath + '\\' + dirName))
 			{
 				subdirectories.Add(dirName);
 				wxMkdir(targetPath + '\\' + dirName);
@@ -521,12 +521,12 @@ void PorzadkowanieZdjecFrame::m_CloneDir(wxString& currPath, wxString& targetPat
 
 		for (wxString sub : subdirectories)
 		{
-			m_CloneDir(currPath + '\\' + sub, targetPath + '\\' + sub);
+			_CopyDir(currPath + '\\' + sub, targetPath + '\\' + sub);
 		}
 	}
 }
 
-bool PorzadkowanieZdjecFrame::m_IsImageToCopyInsideFolder(wxString& currPath) const 
+bool PorzadkowanieZdjecFrame::_ImageCheck(wxString& currPath) const 
 {
 	bool isInsideImage = false;
 	wxDir dir(currPath);
@@ -536,7 +536,7 @@ bool PorzadkowanieZdjecFrame::m_IsImageToCopyInsideFolder(wxString& currPath) co
 
 	for (const auto& extension : c_extensions)
 	{
-		files = m_GetAllFilesInDirWithExtension(dir, extension);
+		files = _GetAllFiles(dir, extension);
 
 		if (files.GetCount() > 0)
 		{
@@ -558,7 +558,7 @@ bool PorzadkowanieZdjecFrame::m_IsImageToCopyInsideFolder(wxString& currPath) co
 
 		for (wxString sub : subdirectories)
 		{
-			if (m_IsImageToCopyInsideFolder(currPath + '\\' + sub))
+			if (_ImageCheck(currPath + '\\' + sub))
 			{
 				return true;
 			}
